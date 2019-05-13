@@ -59,20 +59,16 @@ Ensure you become root and change directory to the downloaded folder
 ```
 sudo -s && cd lemp-ssl-secure
 ```
-Incase the folder is not avalable run
+Incase the folder is not avalable run the command below
 
 ```
 git clone https://github.com/adekoyadapo/lemp-ssl-secure.git
 ```
 
-You will need to edit 3 files
+You will need to edit 2 files
 First the certificate request script. "init-lemp-ssl.sh"
 Edit and change the domains and email section, you might want to set the staging to 1 for test purposes to avoid request limits.
-Edit the default.conf file and change the localhost in the file to your domain name.
-
-```
-git clone https://github.com/adekoyadapo/lemp-ssl-secure.git
-```
+Next edit the default.conf file and change the server_name in the file from localhost to your registered and verified domain name.
 
 Then run the script to initialize the build
 
