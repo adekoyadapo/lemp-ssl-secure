@@ -1,6 +1,6 @@
 #!/bin/bash
 
-domains=(215.141.74.34.bc.googleusercontent.com  www.215.141.74.34.bc.googleusercontent.com)
+domains=(example.org  www.example.org)
 rsa_key_size=4096
 data_path="./data/certbot"
 email="user@mail.com" # Adding a valid address is strongly recommended
