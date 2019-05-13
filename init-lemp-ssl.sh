@@ -3,7 +3,7 @@
 domains=(215.141.74.34.bc.googleusercontent.com  www.215.141.74.34.bc.googleusercontent.com)
 rsa_key_size=4096
 data_path="./data/certbot"
-email="dapphyuk@gmail.com" # Adding a valid address is strongly recommended
+email="user@mail.com" # Adding a valid address is strongly recommended
 staging=1 # Set to 1 if you're testing your setup to avoid hitting request limits
 
 if [ -d "$data_path" ]; then
