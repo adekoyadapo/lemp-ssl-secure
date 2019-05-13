@@ -1,0 +1,60 @@
+version: '3'
+services:
+
+  web:
+      build:
+        context: .
+        dockerfile: ./containers/nginx/Dockerfile
+      container_name: websvr_nginx
+      volumes:
+        - ./data/certbot/conf:/etc/letsencrypt
+        - ./data/certbot/www:/var/www/html
+      restart: always
+      command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+      ports:
+          - "80:80"
+          - "443:443"
+      depends_on:
+          - php
+      networks:
+        - docker-lemp
+
+  certbot:
+      image: certbot/certbot
+      volumes:
+        - ./data/certbot/conf:/etc/letsencrypt
+        - ./data/certbot/www:/var/www/html
+      entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+      networks:
+        - docker-lemp
+
+  php:
+      build:
+        context: .
+        dockerfile: ./containers/php/Dockerfile
+      container_name: php_fpm
+      restart: always
+      depends_on:
+          - mysql
+      networks:
+        - docker-lemp
+
+  mysql:
+      build:
+        context: .
+        dockerfile: ./containers/mysql/Dockerfile
+      container_name: database
+      restart: always
+      environment:
+         MYSQL_ROOT_PASSWORD: pass
+      volumes:
+      - db:/var/lib/mysql
+      networks:
+        - docker-lemp
+
+networks:
+    docker-lemp:
+        driver: bridge
+
+volumes:
+  db:
