@@ -68,8 +68,8 @@ git clone https://github.com/adekoyadapo/lemp-ssl-secure.git
 
 You will need to edit the init file and or the nginx default.conf file
 First the certificate request script. "init-lemp-ssl.sh"
-Edit and change the domains and email section, you might want to set the staging to 1 for test purposes to avoid request limits and re-run the script again to ensure it gets a certificate. Enter y/n when prompted for recieve information
-Next edit the default.cnf file and change the server_name in the file from localhost to your registered and verified domain name.
+Edit and change the domains and email section, you might want to set the staging to 1 for test purposes to avoid request limits and re-run the script again to ensure it gets a certificate. Enter y/n when prompted for recieve further information
+Next edit the default.conf file and change the server_name in the file from localhost to your registered and verified domain name and also the certificate path "/etc/letsencrypt/live/<demo.domain>/privkey.pem" replacing <demo.domain> with the domain name entered in the init-lemp-ssl.sh file
 
 Run the initial build for all containers
 
