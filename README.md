@@ -20,9 +20,9 @@ For standalone environments like running in on a local machine with temporary ce
 
 Dependencies includes Git Wget docker docker-compose
 Ensure selinux is set to disabled or permissive
-The startup script below will ensure dependencies are met for a Centos 7 VM and the repository is pulled and installed in the home directory of the cloud user
+The startup script below will ensure dependencies are met for a Centos 7 VM and the repository is pulled and installed in a specified home directory
 
-You have an already verified domain name with access to nameserver records and create A records and cname.
+You have an already verified domain name with access to nameserver records and create A records and cname and PTR record for the IP given.
 
 Visit [Google WebMAster](https://www.google.com/webmasters/verification/home) for information on the verification process. The best process might be to use a TXT record setup in CloudDNS
 
@@ -39,25 +39,26 @@ sudo curl -L "https://github.com/docker/compose/releases/download/1.24.0/docker-
 sudo chmod +x /usr/local/bin/docker-compose
 sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 sudo sed -i 's/enforcing/disabled/g' /etc/selinux/config /etc/selinux/config
-sudo sestatus
+sudo setenforce 0
 chkconfig docker on
 service docker start
-`dig +short myip.opendns.com @resolver1.opendns.com` | grep name > hostPubIP.txt
-
+mkdir -p /home/LEMP && cd /home/LEMP
 git clone https://github.com/adekoyadapo/lemp-ssl-secure.git
+reboot now
 ```
+You can remove the reboot line incase you want to get right into it.
 
 ### Setup and deploy
 
 SSH into the machine using the cloud shell by clicking on the SSH by the instance IP and copying the cloudshell command or start in cloudshell
 
 ```
-gcloud compute --project "synopsys-k8s" ssh --zone "us-east1-b" "instance-1"
+gcloud compute --project "project-name" ssh --zone "zone" "instance-name"
 ```
 Ensure you become root and change directory to the downloaded folder
 
 ```
-sudo -s && cd lemp-ssl-secure
+sudo -s && cd /home/LEMP/lemp-ssl-secure
 ```
 Incase the folder is not avalable run the command below
 
@@ -65,19 +66,24 @@ Incase the folder is not avalable run the command below
 git clone https://github.com/adekoyadapo/lemp-ssl-secure.git
 ```
 
-You will need to edit 2 files
+You will need to edit the init file and or the nginx default.conf file
 First the certificate request script. "init-lemp-ssl.sh"
-Edit and change the domains and email section, you might want to set the staging to 1 for test purposes to avoid request limits.
-Next edit the default.conf file and change the server_name in the file from localhost to your registered and verified domain name.
+Edit and change the domains and email section, you might want to set the staging to 1 for test purposes to avoid request limits and re-run the script again to ensure it gets a certificate. Enter y/n when prompted for recieve information
+Next edit the default.cnf file and change the server_name in the file from localhost to your registered and verified domain name.
+
+Run the initial build for all containers
+
+```
+docker-compose up -d 
+```
 
 Then run the script to initialize the build
-
 ```
-./init-ssl-secure.git
+./init-ssl-secure.sh
 ```
-## Deployment
+## SSL Deployment
 
-Simply run the command below
+Simply run the command below to update the ssl files into the nginx webserver config
 ```
 docker-compose up -d --build
 ```
